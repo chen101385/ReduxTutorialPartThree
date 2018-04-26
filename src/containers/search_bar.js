@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchWeather } from '../actions/index';
 
-export default class SearchBar extends Component {
+class SearchBar extends Component {
     constructor(props) {
         super(props);
 
@@ -13,11 +16,14 @@ export default class SearchBar extends Component {
     }
 
     onInputChange(e) {
-        this.setState({term: e.target.value});
+        this.setState({ term: e.target.value });
     }
 
     onFormSubmit(e) {
         e.preventDefault();
+
+        this.props.fetchWeather(this.state.term);
+        this.setState({ term: '' });
     }
 
     render() {
@@ -36,3 +42,9 @@ export default class SearchBar extends Component {
         );
     }
 }
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ fetchWeather }, dispatch)
+}
+//null b/c function has to be 2nd argument; no state for 1st argument in this container.  
+export default connect(null, mapDispatchToProps)(SearchBar)
